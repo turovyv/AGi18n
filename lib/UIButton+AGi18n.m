@@ -11,13 +11,18 @@
 @implementation UIButton (AGi18n)
 
 - (void)localizeFromNib {
-
+    
     //Replace text with localizable version
-    NSArray *states = @[@(UIControlStateNormal), @(UIControlStateHighlighted), @(UIControlStateDisabled), @(UIControlStateSelected), @(UIControlStateApplication)];
-    for (NSNumber *state in states) {
-        NSString *title = [self titleForState:state.integerValue];
-        if (title.length > 0) {
-            [self setTitle:[[NSBundle mainBundle] localizedStringForKey:title value:@"" table:nil] forState:state.integerValue];
+    UIControlState states[] = {UIControlStateNormal, UIControlStateSelected, UIControlStateHighlighted, UIControlStateDisabled};
+    const int count = 4;
+    
+    NSString *normalTitle = [self titleForState:UIControlStateNormal];
+    for (int i = 0; i < count; ++i) {
+        UIControlState state = states[i];
+        NSString *title = [self titleForState:state];
+        if (state == UIControlStateNormal || ![title isEqualToString:normalTitle]) {
+            [self setTitle:[[NSBundle mainBundle] localizedStringForKey:title value:@"" table:nil]
+                  forState:state];
         }
     }
 }
